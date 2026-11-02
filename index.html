@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#050a13" />
+  <meta name="description" content="Helios Atlas — a beautiful interactive journey across the solar system, from Mercury to the Oort Cloud. Built with the PlayCanvas Engine." />
+  <title>Helios Atlas — Explore the Solar System</title>
+  <script type="importmap">{"imports":{"playcanvas":"https://cdn.jsdelivr.net/npm/playcanvas@2.23.3/build/playcanvas.mjs"}}</script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="application" aria-label="Interactive 3D solar system rendered using PlayCanvas"></canvas>
+  <div id="world-labels" aria-hidden="true"></div>
+  <div class="vignette"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#saturn" aria-label="Helios Atlas home">
+      <span class="brandmark"><span class="brandmark-core"></span></span>
+      <span class="brandtext"><strong>HELIOS <b>ATLAS</b></strong><small>AN INTERACTIVE SPACE EXPLORER</small></span>
+    </a>
+    <div class="top-center"><span class="status-dot"></span> LIVE 3D SIMULATION <span class="top-divider">/</span> PLAYCANVAS ENGINE</div>
+    <div class="top-actions"><button class="icon-btn" id="help-btn" aria-label="How to use the explorer" title="How to use"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 4 1.8c-1.2.9-1.8 1.3-1.8 3"/><circle cx="12" cy="17" r=".7" fill="currentColor"/></svg></button><button class="small-btn outline" id="fullscreen-btn">⛶ <span>FULLSCREEN</span></button></div>
+  </header>
+
+  <aside class="sidebar glass" id="sidebar">
+    <div class="sidebar-head"><div class="eyebrow">YOUR COSMIC JOURNEY</div><h2>Explore</h2><div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.6" cy="10.6" r="6.4"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Search the solar system" autocomplete="off" aria-label="Search celestial objects"/><span class="search-kbd">/</span></div></div>
+    <div class="sidebar-scroll" id="object-list"></div>
+    <div class="sidebar-foot"><div class="legend-orbit"></div> 8 planets <span class="middot">·</span> 5 dwarf planets <span class="middot">·</span> more to explore</div>
+  </aside>
+
+  <main class="hero-content" aria-label="Solar system viewer">
+    <div class="scene-heading"><div class="scene-kicker"><span class="line-accent"></span> EXPLORATION MODE / <span id="focus-category">GAS GIANT</span></div><h1 id="hero-name">Saturn<span class="hero-period">.</span></h1><p id="hero-subtitle">A world with a thousand rings.</p><button id="focus-action" class="ghost-link">EXPLORE THIS WORLD <span>↗</span></button></div>
+    <div class="scale-note"><span class="small-cross">✳</span> DISTANCES AND SIZES ARTISTICALLY COMPRESSED FOR EXPLORATION</div>
+  </main>
+
+  <aside class="info-panel glass" id="info-panel">
+    <div class="info-head"><span><i></i> CELESTIAL OBJECT / <span id="object-type">GAS GIANT</span></span><button class="close-info" id="toggle-info" aria-label="Collapse information panel">×</button></div>
+    <div class="info-body"><div class="serial" id="object-serial">06 / 22</div><h2 id="info-title">Saturn</h2><div class="info-subtitle" id="info-subtitle">A world with a thousand rings.</div><p id="info-about"></p>
+      <div class="stats-head">THE NUMBERS</div><div class="stat-grid"><div class="stat"><label>DIAMETER / EXTENT</label><strong id="stat-diameter"></strong></div><div class="stat"><label>ORBITAL PERIOD</label><strong id="stat-year"></strong></div><div class="stat"><label>ROTATION</label><strong id="stat-day"></strong></div><div class="stat"><label>TEMPERATURE</label><strong id="stat-temp"></strong></div></div>
+      <div class="fact"><div class="fact-title">✦ &nbsp; DID YOU KNOW?</div><p id="info-fact"></p></div>
+      <a class="nasa-link" href="https://science.nasa.gov/solar-system/" id="nasa-link" target="_blank" rel="noopener noreferrer">LEARN MORE AT NASA <span>↗</span></a>
+    </div>
+    <div class="info-footer"><button id="prev-btn" aria-label="Previous celestial object">←</button><div id="sequence-text">06 / 22</div><button id="next-btn" aria-label="Next celestial object">→</button></div>
+  </aside>
+
+  <div class="hud-right" id="hud-right"><div class="layer-title">LAYERS <span>✳</span></div><div id="layer-toggles"></div></div>
+
+  <div class="bottom-dock glass">
+    <div class="dock-section view-tabs"><div class="dock-label">NAVIGATE</div><div class="tabs" id="view-tabs"><button data-preset="inner">INNER SYSTEM</button><button data-preset="system">FULL SYSTEM</button><button data-preset="outer">KUIPER BELT</button><button data-preset="edge">OORT CLOUD</button></div></div>
+    <div class="dock-divider"></div>
+    <div class="dock-section playback"><div class="dock-label">TIME CONTROL <span id="speed-label">1× REALTIME*</span></div><div class="playback-row"><button id="play-btn" class="play-btn" aria-label="Pause simulation"><span id="play-symbol">Ⅱ</span></button><input id="speed-slider" type="range" min="0" max="100" value="31" aria-label="Simulation speed" /><button class="speed-button" id="speed-reset">1×</button></div></div>
+    <div class="dock-divider hide-mobile"></div>
+    <div class="dock-section control-hint"><div class="dock-label">CAMERA CONTROLS</div><div class="hint-row"><span>↔</span> DRAG TO ORBIT <span>↕</span> SCROLL TO ZOOM</div></div>
+  </div>
+  <button class="restore-info" id="restore-info">ⓘ &nbsp; SHOW DETAILS</button>
+  <button class="mobile-nav-toggle" id="mobile-nav-toggle">☷ &nbsp; EXPLORE</button>
+  <button class="mobile-info-toggle" id="mobile-info-toggle">ⓘ &nbsp; DETAILS</button>
+  <div id="toast" role="status"></div>
+  <div class="loading-screen" id="loading-screen"><div class="loading-symbol"><div></div><div></div></div><div class="loading-title">HELIOS <span>ATLAS</span></div><div class="loading-line"></div><div class="loading-description" id="loading-message">INITIALIZING YOUR UNIVERSE</div></div>
+
+  <dialog id="help-dialog"><button id="close-help" class="dialog-close" aria-label="Close">×</button><div class="eyebrow">FIELD GUIDE / 001</div><h2>Welcome to the <em>solar system.</em></h2><p>Travel from the Sun to icy dwarf planets and the hypothesized Oort Cloud. This is a stylized 3D atlas — not an ephemeris or an accurate-scale simulation.</p><div class="help-grid"><div><strong>DRAG</strong><span>Rotate your view</span></div><div><strong>SCROLL / PINCH</strong><span>Move closer or farther</span></div><div><strong>CLICK</strong><span>Fly to a world</span></div><div><strong>SPACE</strong><span>Pause / play orbital motion</span></div><div><strong>← / →</strong><span>Previous / next body</span></div><div><strong>/</strong><span>Search for an object</span></div></div><p class="dialog-foot">All planets and dwarf planets are navigable. Use the layer toggles to reveal orbital paths, asteroid populations, the Kuiper Belt, and Oort Cloud.</p><button class="primary-btn" id="start-exploring">START EXPLORING &nbsp; ↗</button></dialog>
+  <script type="module" src="src/main.js"></script>
+  <script>setTimeout(()=>{if(!window.HELIOS_READY){let el=document.getElementById('loading-message');if(el)el.textContent='STILL LOADING — INTERNET ACCESS IS REQUIRED TO FETCH THE PLAYCANVAS ENGINE';}},16000)</script>
+</body>
+</html>
